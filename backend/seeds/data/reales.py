@@ -499,7 +499,7 @@ FAQS = [
         "7 días hábiles.",
         "Te devolvemos el 85% si lo pides al menos 2 horas antes de la salida, llamando al 6 7 6 4 0 1 5 5. "
         "Después ya no hay devolución. El reembolso tarda hasta 7 días hábiles.",
-        ["reembolso", "devolucion", "devolver", "cancelar", "anular", "85"],
+        ["reembolso", "devolucion", "devolver", "devuelvan", "dinero", "cancelar", "anular", "85"],
     ),
     (
         "equipaje",

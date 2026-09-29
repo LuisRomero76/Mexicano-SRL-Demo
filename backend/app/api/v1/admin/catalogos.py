@@ -11,6 +11,7 @@ from app.core.deps import TODO_EL_PERSONAL, PaginacionDep, SessionDep, requiere_
 from app.core.errors import NoEncontrado, ReglaNegocio
 from app.models import (
     Auditoria,
+    BotConsultaLog,
     Bus,
     Cliente,
     CuentaCorporativa,
@@ -30,6 +31,7 @@ from app.models import (
 from app.models.enums import RolUsuario
 from app.schemas.admin import (
     AuditoriaOut,
+    BotConsultaOut,
     BusIn,
     BusOut,
     BusUpdate,
@@ -253,7 +255,10 @@ async def eliminar_feriado(session: SessionDep, feriado_id: int, usuario: Usuari
 
 @router.put("/paginas/{slug}", response_model=PaginaOut, summary="Editar una página de contenido")
 async def editar_pagina(
-    session: SessionDep, slug: str, datos: PaginaUpdate, usuario: Usuario = Depends(requiere_roles(R.supervisor, R.soporte))
+    session: SessionDep,
+    slug: str,
+    datos: PaginaUpdate,
+    usuario: Usuario = Depends(requiere_roles(R.supervisor, R.soporte)),
 ):
     pagina_id = await session.scalar(select(PaginaContenido.id).where(PaginaContenido.slug == slug))
     if not pagina_id:
@@ -357,12 +362,32 @@ async def listar_auditoria(
         if ids
         else {}
     )
-    filas = [
-        AuditoriaOut.model_validate(a).model_copy(update={"usuario": nombres.get(a.usuario_id)}) for a in items
-    ]
+    filas = [AuditoriaOut.model_validate(a).model_copy(update={"usuario": nombres.get(a.usuario_id)}) for a in items]
     return {"total": total or 0, "limit": pag.limit, "offset": pag.offset, "items": filas}
 
 
 @router.get("/auditoria/tablas", response_model=list[str], summary="Tablas con registros de auditoría")
 async def tablas_auditoria(session: SessionDep, _: Usuario = _supervisor):
     return (await session.scalars(select(Auditoria.tabla).distinct().order_by(Auditoria.tabla))).all()
+
+
+@router.get(
+    "/bot/consultas",
+    response_model=Pagina[BotConsultaOut],
+    summary="Consultas del agente de voz (más reciente primero)",
+)
+async def consultas_bot(
+    session: SessionDep,
+    pag: PaginacionDep,
+    tool: str | None = None,
+    encontrado: bool | None = None,
+    _: Usuario = _supervisor,
+):
+    q = select(BotConsultaLog)
+    if tool:
+        q = q.where(BotConsultaLog.tool == tool)
+    if encontrado is not None:
+        q = q.where(BotConsultaLog.encontrado == encontrado)
+    total = await session.scalar(select(func.count()).select_from(q.subquery()))
+    items = (await session.scalars(q.order_by(BotConsultaLog.id.desc()).limit(pag.limit).offset(pag.offset))).all()
+    return {"total": total or 0, "limit": pag.limit, "offset": pag.offset, "items": items}

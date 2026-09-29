@@ -566,5 +566,18 @@ class AuditoriaOut(Esquema):
     usuario: str | None = None
 
 
+class BotConsultaOut(Esquema):
+    id: int
+    tool: str
+    caller_id: str | None
+    parametros: dict[str, Any] | None
+    encontrado: bool
+    coincide_caller: bool | None
+    resultado: dict[str, Any] | None
+    codigo_http: int
+    latencia_ms: int
+    created_at: FechaHora
+
+
 class AsignarVehiculoIn(BaseModel):
     vehiculo_id: int

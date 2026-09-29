@@ -123,7 +123,7 @@ USUARIOS="$(psql "$URL_ACTUAL" -tAc 'SELECT count(*) FROM usuarios')"
 if [[ "$USUARIOS" == "0" ]]; then
   .venv/bin/python -m seeds.run_seeds --reset
 else
-  .venv/bin/python -m seeds.run_seeds
+  .venv/bin/python -m seeds.run_seeds --solo-salidas
 fi
 
 paso "Servicio de la API"
@@ -150,7 +150,7 @@ paso "Tareas programadas"
 chmod +x "$APP_DIR/deploy/"*.sh
 sudo tee /etc/cron.d/elmexicano >/dev/null <<EOF
 # Salidas de los próximos días y estados según la hora (04:00, hora de Bolivia)
-0 4 * * * $USUARIO cd $APP_DIR/backend && .venv/bin/python -m seeds.run_seeds >> /home/$USUARIO/seeds.log 2>&1
+0 4 * * * $USUARIO cd $APP_DIR/backend && .venv/bin/python -m seeds.run_seeds --solo-salidas >> /home/$USUARIO/seeds.log 2>&1
 # Respaldo diario de la base (se conservan 7)
 30 3 * * * $USUARIO $APP_DIR/deploy/backup.sh >> /home/$USUARIO/backup.log 2>&1
 EOF

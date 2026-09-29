@@ -1440,6 +1440,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/bot/consultas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Consultas del agente de voz (más reciente primero) */
+        get: operations["consultas_bot_api_v1_admin_bot_consultas_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/reportes/ventas": {
         parameters: {
             query?: never;
@@ -1502,6 +1519,190 @@ export interface paths {
         get: operations["resumen_api_v1_admin_reportes_resumen_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bot/encomiendas/{numero_guia}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * rastrear_encomienda: estado de una guía
+         * @description Estado, oficina de retiro con dirección y horario, pago pendiente y últimos 3 eventos.
+         *     Datos completos solo si `caller_id` es el teléfono del destinatario o del remitente. Nunca devuelve el PIN.
+         */
+        get: operations["rastrear_encomienda_api_bot_encomiendas__numero_guia__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bot/encomiendas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * mis_encomiendas: envíos activos de quien llama
+         * @description Hasta 5 encomiendas no finalizadas donde `caller_id` es remitente o destinatario.
+         */
+        get: operations["mis_encomiendas_api_bot_encomiendas_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bot/salidas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** consultar_salidas: horarios, precios y asientos libres de un día */
+        get: operations["consultar_salidas_api_bot_salidas_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bot/rutas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** listar_rutas: rutas con distancia, duración y horarios */
+        get: operations["listar_rutas_api_bot_rutas_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bot/tarifas-carga": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** cotizar_envio: precio de un envío de carga o encomienda */
+        get: operations["cotizar_envio_api_bot_tarifas_carga_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bot/reservas/{codigo}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * consultar_reserva: estado de una reserva de pasajes
+         * @description Estado, boletos, salida y demora. Detalle del viaje y montos solo si `caller_id` es el del comprador.
+         */
+        get: operations["consultar_reserva_api_bot_reservas__codigo__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bot/oficinas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** info_oficinas: dirección, teléfono y horario de las oficinas de una ciudad */
+        get: operations["info_oficinas_api_bot_oficinas_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bot/faqs/buscar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** buscar_faq: respuesta corta a una pregunta frecuente */
+        get: operations["buscar_faq_api_bot_faqs_buscar_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bot/empresa": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** info_empresa: contactos y dónde comprar pasajes */
+        get: operations["info_empresa_api_bot_empresa_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bot/puerta-a-puerta": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * solicitar_puerta_a_puerta: agenda un recojo o una entrega a domicilio
+         * @description Solo Sucre y Santa Cruz, de lunes a viernes hábiles (recojos 14:00–17:00, entregas 08:00–12:00).
+         *     Si falta algún dato responde qué pedirle al cliente. El teléfono de contacto por defecto es `caller_id`.
+         */
+        post: operations["solicitar_puerta_a_puerta_api_bot_puerta_a_puerta_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1636,6 +1837,65 @@ export interface components {
             codigo_qr: string | null;
             /** Viaja Con Perro Guia */
             viaja_con_perro_guia: boolean;
+        };
+        /** BotConsultaOut */
+        BotConsultaOut: {
+            /** Id */
+            id: number;
+            /** Tool */
+            tool: string;
+            /** Caller Id */
+            caller_id: string | null;
+            /** Parametros */
+            parametros: {
+                [key: string]: unknown;
+            } | null;
+            /** Encontrado */
+            encontrado: boolean;
+            /** Coincide Caller */
+            coincide_caller: boolean | null;
+            /** Resultado */
+            resultado: {
+                [key: string]: unknown;
+            } | null;
+            /** Codigo Http */
+            codigo_http: number;
+            /** Latencia Ms */
+            latencia_ms: number;
+            /** Created At */
+            created_at: string;
+        };
+        /**
+         * BotPuertaIn
+         * @description Datos que el agente recoge en la conversación; todos opcionales para poder pedir lo que falte.
+         */
+        BotPuertaIn: {
+            /** Caller Id */
+            caller_id?: string | null;
+            /** Tipo */
+            tipo?: string | null;
+            /** Ciudad */
+            ciudad?: string | null;
+            /** Numero Documento */
+            numero_documento?: string | null;
+            /** Nombres */
+            nombres?: string | null;
+            /** Apellidos */
+            apellidos?: string | null;
+            /** Telefono */
+            telefono?: string | null;
+            /** Direccion */
+            direccion?: string | null;
+            /** Referencia */
+            referencia?: string | null;
+            /** Fecha */
+            fecha?: string | null;
+            /** Peso Kg */
+            peso_kg?: string | null;
+            /** Descripcion */
+            descripcion?: string | null;
+            /** Numero Guia */
+            numero_guia?: string | null;
         };
         /** BusIn */
         BusIn: {
@@ -2719,6 +2979,17 @@ export interface components {
             offset: number;
             /** Items */
             items: components["schemas"]["AuditoriaOut"][];
+        };
+        /** Pagina[BotConsultaOut] */
+        Pagina_BotConsultaOut_: {
+            /** Total */
+            total: number;
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Items */
+            items: components["schemas"]["BotConsultaOut"][];
         };
         /** Pagina[ClienteOut] */
         Pagina_ClienteOut_: {
@@ -7488,6 +7759,42 @@ export interface operations {
             };
         };
     };
+    consultas_bot_api_v1_admin_bot_consultas_get: {
+        parameters: {
+            query?: {
+                tool?: string | null;
+                encontrado?: boolean | null;
+                /** @description Cantidad de resultados */
+                limit?: number;
+                /** @description Resultados a saltar */
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Pagina_BotConsultaOut_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     ventas_api_v1_admin_reportes_ventas_get: {
         parameters: {
             query?: {
@@ -7595,6 +7902,335 @@ export interface operations {
                     "application/json": {
                         [key: string]: unknown;
                     };
+                };
+            };
+        };
+    };
+    rastrear_encomienda_api_bot_encomiendas__numero_guia__get: {
+        parameters: {
+            query?: {
+                /** @description Teléfono de quien llama; en ElevenLabs, la variable dinámica {{system__caller_id}} */
+                caller_id?: string | null;
+            };
+            header?: never;
+            path: {
+                numero_guia: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    mis_encomiendas_api_bot_encomiendas_get: {
+        parameters: {
+            query?: {
+                /** @description Teléfono de quien llama; en ElevenLabs, la variable dinámica {{system__caller_id}} */
+                caller_id?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    consultar_salidas_api_bot_salidas_get: {
+        parameters: {
+            query?: {
+                /** @description Ciudad de origen (acepta alias: 'Santa Cruz de la Sierra', 'SCZ') */
+                origen?: string | null;
+                /** @description Ciudad de destino */
+                destino?: string | null;
+                /** @description hoy, mañana, pasado mañana, un día de la semana, 2026-10-02 o 2/10 */
+                fecha?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listar_rutas_api_bot_rutas_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    cotizar_envio_api_bot_tarifas_carga_get: {
+        parameters: {
+            query?: {
+                origen?: string | null;
+                destino?: string | null;
+                /** @description Peso en kilos, por ejemplo 3 o 2,5 */
+                peso_kg?: string | null;
+                /** @description sobre, paquete o carga; si se omite se deduce del peso */
+                tipo?: string | null;
+                /** @description true si se entrega a domicilio */
+                puerta_a_puerta?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    consultar_reserva_api_bot_reservas__codigo__get: {
+        parameters: {
+            query?: {
+                /** @description Teléfono de quien llama; en ElevenLabs, la variable dinámica {{system__caller_id}} */
+                caller_id?: string | null;
+            };
+            header?: never;
+            path: {
+                codigo: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    info_oficinas_api_bot_oficinas_get: {
+        parameters: {
+            query?: {
+                ciudad?: string | null;
+                /** @description pasajes o carga (opcional) */
+                tipo?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    buscar_faq_api_bot_faqs_buscar_get: {
+        parameters: {
+            query?: {
+                q?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    info_empresa_api_bot_empresa_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    solicitar_puerta_a_puerta_api_bot_puerta_a_puerta_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BotPuertaIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

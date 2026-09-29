@@ -5992,6 +5992,103 @@
     ]
    }
   },
+  "/api/v1/admin/bot/consultas": {
+   "get": {
+    "tags": [
+     "Admin · Catálogos"
+    ],
+    "summary": "Consultas del agente de voz (más reciente primero)",
+    "operationId": "consultas_bot_api_v1_admin_bot_consultas_get",
+    "security": [
+     {
+      "OAuth2PasswordBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "tool",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Tool"
+      }
+     },
+     {
+      "name": "encontrado",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Encontrado"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 100,
+       "minimum": 1,
+       "description": "Cantidad de resultados",
+       "default": 20,
+       "title": "Limit"
+      },
+      "description": "Cantidad de resultados"
+     },
+     {
+      "name": "offset",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "minimum": 0,
+       "description": "Resultados a saltar",
+       "default": 0,
+       "title": "Offset"
+      },
+      "description": "Resultados a saltar"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Pagina_BotConsultaOut_"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
   "/api/v1/admin/reportes/ventas": {
    "get": {
     "tags": [
@@ -6180,6 +6277,586 @@
       "OAuth2PasswordBearer": []
      }
     ]
+   }
+  },
+  "/api/bot/encomiendas/{numero_guia}": {
+   "get": {
+    "tags": [
+     "Agente de voz (ElevenLabs)"
+    ],
+    "summary": "rastrear_encomienda: estado de una guía",
+    "description": "Estado, oficina de retiro con dirección y horario, pago pendiente y últimos 3 eventos.\nDatos completos solo si `caller_id` es el teléfono del destinatario o del remitente. Nunca devuelve el PIN.",
+    "operationId": "rastrear_encomienda_api_bot_encomiendas__numero_guia__get",
+    "parameters": [
+     {
+      "name": "numero_guia",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Numero Guia"
+      }
+     },
+     {
+      "name": "caller_id",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Teléfono de quien llama; en ElevenLabs, la variable dinámica {{system__caller_id}}",
+       "title": "Caller Id"
+      },
+      "description": "Teléfono de quien llama; en ElevenLabs, la variable dinámica {{system__caller_id}}"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/bot/encomiendas": {
+   "get": {
+    "tags": [
+     "Agente de voz (ElevenLabs)"
+    ],
+    "summary": "mis_encomiendas: envíos activos de quien llama",
+    "description": "Hasta 5 encomiendas no finalizadas donde `caller_id` es remitente o destinatario.",
+    "operationId": "mis_encomiendas_api_bot_encomiendas_get",
+    "parameters": [
+     {
+      "name": "caller_id",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Teléfono de quien llama; en ElevenLabs, la variable dinámica {{system__caller_id}}",
+       "title": "Caller Id"
+      },
+      "description": "Teléfono de quien llama; en ElevenLabs, la variable dinámica {{system__caller_id}}"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/bot/salidas": {
+   "get": {
+    "tags": [
+     "Agente de voz (ElevenLabs)"
+    ],
+    "summary": "consultar_salidas: horarios, precios y asientos libres de un día",
+    "operationId": "consultar_salidas_api_bot_salidas_get",
+    "parameters": [
+     {
+      "name": "origen",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Ciudad de origen (acepta alias: 'Santa Cruz de la Sierra', 'SCZ')",
+       "title": "Origen"
+      },
+      "description": "Ciudad de origen (acepta alias: 'Santa Cruz de la Sierra', 'SCZ')"
+     },
+     {
+      "name": "destino",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Ciudad de destino",
+       "title": "Destino"
+      },
+      "description": "Ciudad de destino"
+     },
+     {
+      "name": "fecha",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "hoy, mañana, pasado mañana, un día de la semana, 2026-10-02 o 2/10",
+       "title": "Fecha"
+      },
+      "description": "hoy, mañana, pasado mañana, un día de la semana, 2026-10-02 o 2/10"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/bot/rutas": {
+   "get": {
+    "tags": [
+     "Agente de voz (ElevenLabs)"
+    ],
+    "summary": "listar_rutas: rutas con distancia, duración y horarios",
+    "operationId": "listar_rutas_api_bot_rutas_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/bot/tarifas-carga": {
+   "get": {
+    "tags": [
+     "Agente de voz (ElevenLabs)"
+    ],
+    "summary": "cotizar_envio: precio de un envío de carga o encomienda",
+    "operationId": "cotizar_envio_api_bot_tarifas_carga_get",
+    "parameters": [
+     {
+      "name": "origen",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Origen"
+      }
+     },
+     {
+      "name": "destino",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Destino"
+      }
+     },
+     {
+      "name": "peso_kg",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Peso en kilos, por ejemplo 3 o 2,5",
+       "title": "Peso Kg"
+      },
+      "description": "Peso en kilos, por ejemplo 3 o 2,5"
+     },
+     {
+      "name": "tipo",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "sobre, paquete o carga; si se omite se deduce del peso",
+       "title": "Tipo"
+      },
+      "description": "sobre, paquete o carga; si se omite se deduce del peso"
+     },
+     {
+      "name": "puerta_a_puerta",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "true si se entrega a domicilio",
+       "title": "Puerta A Puerta"
+      },
+      "description": "true si se entrega a domicilio"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/bot/reservas/{codigo}": {
+   "get": {
+    "tags": [
+     "Agente de voz (ElevenLabs)"
+    ],
+    "summary": "consultar_reserva: estado de una reserva de pasajes",
+    "description": "Estado, boletos, salida y demora. Detalle del viaje y montos solo si `caller_id` es el del comprador.",
+    "operationId": "consultar_reserva_api_bot_reservas__codigo__get",
+    "parameters": [
+     {
+      "name": "codigo",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Codigo"
+      }
+     },
+     {
+      "name": "caller_id",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Teléfono de quien llama; en ElevenLabs, la variable dinámica {{system__caller_id}}",
+       "title": "Caller Id"
+      },
+      "description": "Teléfono de quien llama; en ElevenLabs, la variable dinámica {{system__caller_id}}"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/bot/oficinas": {
+   "get": {
+    "tags": [
+     "Agente de voz (ElevenLabs)"
+    ],
+    "summary": "info_oficinas: dirección, teléfono y horario de las oficinas de una ciudad",
+    "operationId": "info_oficinas_api_bot_oficinas_get",
+    "parameters": [
+     {
+      "name": "ciudad",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Ciudad"
+      }
+     },
+     {
+      "name": "tipo",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "pasajes o carga (opcional)",
+       "title": "Tipo"
+      },
+      "description": "pasajes o carga (opcional)"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/bot/faqs/buscar": {
+   "get": {
+    "tags": [
+     "Agente de voz (ElevenLabs)"
+    ],
+    "summary": "buscar_faq: respuesta corta a una pregunta frecuente",
+    "operationId": "buscar_faq_api_bot_faqs_buscar_get",
+    "parameters": [
+     {
+      "name": "q",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Q"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/bot/empresa": {
+   "get": {
+    "tags": [
+     "Agente de voz (ElevenLabs)"
+    ],
+    "summary": "info_empresa: contactos y dónde comprar pasajes",
+    "operationId": "info_empresa_api_bot_empresa_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/bot/puerta-a-puerta": {
+   "post": {
+    "tags": [
+     "Agente de voz (ElevenLabs)"
+    ],
+    "summary": "solicitar_puerta_a_puerta: agenda un recojo o una entrega a domicilio",
+    "description": "Solo Sucre y Santa Cruz, de lunes a viernes hábiles (recojos 14:00–17:00, entregas 08:00–12:00).\nSi falta algún dato responde qué pedirle al cliente. El teléfono de contacto por defecto es `caller_id`.",
+    "operationId": "solicitar_puerta_a_puerta_api_bot_puerta_a_puerta_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/BotPuertaIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
    }
   },
   "/health": {
@@ -6489,6 +7166,244 @@
      "viaja_con_perro_guia"
     ],
     "title": "BoletoOut"
+   },
+   "BotConsultaOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "tool": {
+      "type": "string",
+      "title": "Tool"
+     },
+     "caller_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Caller Id"
+     },
+     "parametros": {
+      "anyOf": [
+       {
+        "additionalProperties": true,
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Parametros"
+     },
+     "encontrado": {
+      "type": "boolean",
+      "title": "Encontrado"
+     },
+     "coincide_caller": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Coincide Caller"
+     },
+     "resultado": {
+      "anyOf": [
+       {
+        "additionalProperties": true,
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Resultado"
+     },
+     "codigo_http": {
+      "type": "integer",
+      "title": "Codigo Http"
+     },
+     "latencia_ms": {
+      "type": "integer",
+      "title": "Latencia Ms"
+     },
+     "created_at": {
+      "type": "string",
+      "title": "Created At"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "tool",
+     "caller_id",
+     "parametros",
+     "encontrado",
+     "coincide_caller",
+     "resultado",
+     "codigo_http",
+     "latencia_ms",
+     "created_at"
+    ],
+    "title": "BotConsultaOut"
+   },
+   "BotPuertaIn": {
+    "properties": {
+     "caller_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Caller Id"
+     },
+     "tipo": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Tipo"
+     },
+     "ciudad": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ciudad"
+     },
+     "numero_documento": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Numero Documento"
+     },
+     "nombres": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Nombres"
+     },
+     "apellidos": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Apellidos"
+     },
+     "telefono": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Telefono"
+     },
+     "direccion": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Direccion"
+     },
+     "referencia": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Referencia"
+     },
+     "fecha": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Fecha"
+     },
+     "peso_kg": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Peso Kg"
+     },
+     "descripcion": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Descripcion"
+     },
+     "numero_guia": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Numero Guia"
+     }
+    },
+    "type": "object",
+    "title": "BotPuertaIn",
+    "description": "Datos que el agente recoge en la conversación; todos opcionales para poder pedir lo que falte."
    },
    "BusIn": {
     "properties": {
@@ -10085,6 +11000,37 @@
      "items"
     ],
     "title": "Pagina[AuditoriaOut]"
+   },
+   "Pagina_BotConsultaOut_": {
+    "properties": {
+     "total": {
+      "type": "integer",
+      "title": "Total"
+     },
+     "limit": {
+      "type": "integer",
+      "title": "Limit"
+     },
+     "offset": {
+      "type": "integer",
+      "title": "Offset"
+     },
+     "items": {
+      "items": {
+       "$ref": "#/components/schemas/BotConsultaOut"
+      },
+      "type": "array",
+      "title": "Items"
+     }
+    },
+    "type": "object",
+    "required": [
+     "total",
+     "limit",
+     "offset",
+     "items"
+    ],
+    "title": "Pagina[BotConsultaOut]"
    },
    "Pagina_ClienteOut_": {
     "properties": {

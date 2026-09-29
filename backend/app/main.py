@@ -11,6 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
 
+from app.api import bot as bot_api
 from app.api.v1.router import api_router
 from app.core.config import get_settings
 from app.core.db import SessionLocal, engine
@@ -78,7 +79,9 @@ async def cabeceras_de_seguridad(request: Request, call_next):
     respuesta = await call_next(request)
     for nombre, valor in _CABECERAS_SEGURIDAD.items():
         respuesta.headers.setdefault(nombre, valor)
-    if request.url.path.startswith(("/api/v1/admin", "/api/v1/auth", "/api/v1/reservas", "/api/v1/boletos")):
+    if request.url.path.startswith(
+        ("/api/v1/admin", "/api/v1/auth", "/api/v1/reservas", "/api/v1/boletos", "/api/bot")
+    ):
         respuesta.headers["Cache-Control"] = "no-store"
     if settings.cookie_secure:
         respuesta.headers.setdefault("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
@@ -87,6 +90,7 @@ async def cabeceras_de_seguridad(request: Request, call_next):
 
 registrar_manejadores(app)
 app.include_router(api_router)
+app.include_router(bot_api.router)
 
 
 @app.get("/health", tags=["Sistema"], summary="Estado del servicio y de la base de datos")

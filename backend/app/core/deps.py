@@ -10,15 +10,19 @@ from collections.abc import Callable
 from typing import Annotated
 
 import jwt
-from fastapi import Depends, Query, Request
+from fastapi import Depends, Header, Query, Request
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import get_settings
 from app.core.db import get_session
-from app.core.errors import NoAutorizado, Prohibido
+from app.core.errors import DemasiadosIntentos, NoAutorizado, Prohibido
+from app.core.ratelimit import ip_cliente, limitador
 from app.core.security import COOKIE_SESION, decodificar_token
 from app.models import Usuario
 from app.models.enums import RolUsuario
+from app.services import api_keys
+from app.services.api_keys import KeyValida
 
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
 
@@ -77,3 +81,41 @@ class Paginacion:
 
 
 PaginacionDep = Annotated[Paginacion, Depends()]
+
+
+# --- Agente de voz (API key en X-Bot-Key) ------------------------------------------------------
+
+
+def _limitar(clave: str, maximo: int) -> None:
+    if not get_settings().rate_limit_enabled:
+        return
+    espera = limitador.registrar(clave, maximo, 60)
+    if espera:
+        raise DemasiadosIntentos(
+            f"Demasiadas consultas. Vuelve a intentar en {espera} segundos.",
+            detalle={"reintentar_en_segundos": espera},
+        )
+
+
+def requiere_bot(scope: str) -> Callable:
+    """Autentica la API key del header `X-Bot-Key`, exige el scope y limita las solicitudes por key."""
+
+    async def _verificar(
+        request: Request,
+        session: SessionDep,
+        x_bot_key: str | None = Header(None, alias="X-Bot-Key", include_in_schema=False),
+    ) -> KeyValida:
+        if not x_bot_key:
+            _limitar(f"bot-sin-key:{ip_cliente(request)}", 30)
+            raise NoAutorizado("Falta la cabecera X-Bot-Key.", codigo="bot_key_requerida")
+        key = await api_keys.autenticar(session, x_bot_key.strip())
+        if not key:
+            # Las keys inválidas se limitan por IP para frenar intentos de adivinarlas.
+            _limitar(f"bot-key-invalida:{ip_cliente(request)}", 30)
+            raise NoAutorizado("API key inválida o revocada.", codigo="bot_key_invalida")
+        if scope not in key.scopes:
+            raise Prohibido(f"Esta API key no tiene el permiso {scope}.", codigo="bot_scope_insuficiente")
+        _limitar(f"bot:{key.id}", get_settings().bot_rate_limit_por_minuto)
+        return key
+
+    return _verificar

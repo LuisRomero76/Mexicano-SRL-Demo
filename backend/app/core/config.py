@@ -34,6 +34,9 @@ class Settings(BaseSettings):
     docs_enabled: bool = True
     trust_proxy_headers: bool = False  # true detrás de un proxy que fija X-Forwarded-For
 
+    # Agente de voz: solicitudes por minuto permitidas a cada API key.
+    bot_rate_limit_por_minuto: int = 120
+
     @field_validator("cors_origins", mode="before")
     @classmethod
     def _split_origins(cls, v: Any) -> Any:

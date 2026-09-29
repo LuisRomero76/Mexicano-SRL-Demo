@@ -1,6 +1,7 @@
 """Importa todos los modelos para registrarlos en `Base.metadata` (Alembic los necesita)."""
 
 from app.models.base import Base
+from app.models.bot import ApiKey, BotConsultaLog
 from app.models.carga import (
     CuentaCorporativa,
     Encomienda,
@@ -26,10 +27,12 @@ from app.models.usuarios import Auditoria, Usuario
 from app.models.ventas import Boleto, Cliente, Equipaje, VentaPasaje
 
 __all__ = [
+    "ApiKey",
     "Asiento",
     "Auditoria",
     "Base",
     "Boleto",
+    "BotConsultaLog",
     "Bus",
     "Ciudad",
     "Cliente",

@@ -89,6 +89,14 @@ DOMINIO=elmexicano-demo.duckdns.org DEMO_TELEFONO=591XXXXXXXX bash ~/app/deploy/
 
 Tarda entre 5 y 10 minutos. Instala PostgreSQL, Node, Caddy, crea la base con una contraseña aleatoria, genera el `.env` de producción con un `JWT_SECRET` aleatorio, carga los datos, compila el frontend, deja la API como servicio, configura HTTPS y programa las salidas diarias y el respaldo.
 
+**Al final de la salida aparece la API key del agente de voz** (`X-Bot-Key: emk_…`). Cópiala en ese momento: solo se muestra una vez. Si la pierdes, genera otra con:
+
+```bash
+cd ~/app/backend && .venv/bin/python -m seeds.api_key --rotar
+```
+
+La configuración de las herramientas en ElevenLabs está en `backend/README.md`, sección 7. La URL base es `https://TU_DOMINIO/api/bot`.
+
 ## Paso 8 · Comprobar y asegurar
 
 1. Abre `https://elmexicano-demo.duckdns.org` y `…/admin`.
