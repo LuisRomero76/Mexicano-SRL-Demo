@@ -1,0 +1,31 @@
+# Sitio público + API en el mismo dominio (la cookie de sesión es SameSite=Strict).
+# install.sh reemplaza __DOMINIO__ y __WEB_ROOT__ y lo copia a /etc/caddy/Caddyfile.
+# Caddy obtiene y renueva solo el certificado HTTPS (Let's Encrypt).
+
+__DOMINIO__ {
+	encode zstd gzip
+
+	# API: solo /api sale a internet (/docs está desactivado en producción).
+	handle /api/* {
+		reverse_proxy 127.0.0.1:8000
+	}
+
+	# Frontend compilado; las rutas del portal y del panel vuelven a index.html.
+	handle {
+		root * __WEB_ROOT__
+		try_files {path} /index.html
+		file_server
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Frame-Options "DENY"
+		Content-Security-Policy "frame-ancestors 'none'"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+	# Los archivos de /assets llevan hash en el nombre: se pueden guardar en caché un año.
+	header /assets/* Cache-Control "public, max-age=31536000, immutable"
+	header /index.html Cache-Control "no-cache"
+}

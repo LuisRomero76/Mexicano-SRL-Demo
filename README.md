@@ -43,3 +43,7 @@ cd backend && pytest                    # API: business rules, permissions, secu
 cd frontend && pnpm test                # unit and component tests
 cd frontend && pnpm test:e2e            # end-to-end (needs the API running)
 ```
+
+## Deployment
+
+A single free Oracle Cloud VM runs the portal, the API and PostgreSQL behind Caddy with automatic HTTPS. See [`deploy/README.md`](deploy/README.md).

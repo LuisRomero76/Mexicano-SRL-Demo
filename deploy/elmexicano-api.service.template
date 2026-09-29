@@ -1,0 +1,20 @@
+# install.sh reemplaza __USUARIO__ y __APP_DIR__ y lo copia a /etc/systemd/system/elmexicano-api.service.
+[Unit]
+Description=El Mexicano API (FastAPI)
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+User=__USUARIO__
+WorkingDirectory=__APP_DIR__/backend
+# Un solo proceso: el límite de intentos y la tarea de reservas viven en memoria.
+ExecStart=__APP_DIR__/backend/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000 --proxy-headers --forwarded-allow-ips 127.0.0.1
+Restart=always
+RestartSec=3
+# Endurecimiento básico
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target
