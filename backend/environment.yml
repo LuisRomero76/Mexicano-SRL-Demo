@@ -1,0 +1,28 @@
+name: elmexicano-api
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+      # API
+      - fastapi==0.141.1
+      - uvicorn[standard]==0.54.0
+      - python-multipart==0.0.32
+      - email-validator==2.3.0
+      # Base de datos
+      - sqlalchemy[asyncio]==2.1.1
+      - alembic==1.20.0
+      - asyncpg==0.31.0
+      # Configuración y validación
+      - pydantic==2.13.5
+      - pydantic-settings==2.15.0
+      - tzdata==2026.4
+      # Seguridad
+      - pyjwt==2.15.1
+      - argon2-cffi==25.1.0
+      # Desarrollo y tests
+      - httpx==0.28.1
+      - pytest==9.1.1
+      - pytest-asyncio==1.4.0
+      - ruff==0.16.9
