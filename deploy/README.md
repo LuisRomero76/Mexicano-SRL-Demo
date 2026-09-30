@@ -2,6 +2,8 @@
 
 Todo en una sola VPS gratuita: **portal + API + PostgreSQL**, con HTTPS automático.
 
+> ¿Sin VPS todavía? Alternativa gratuita temporal con Vercel + Render + Neon: [`VERCEL_RENDER.md`](VERCEL_RENDER.md).
+
 ```
 Navegador ──HTTPS──> Caddy :443 ─┬─ /        → frontend compilado (/var/www/elmexicano)
                                  └─ /api/*   → FastAPI 127.0.0.1:8000 (systemd)

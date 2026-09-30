@@ -1,5 +1,6 @@
 # Internal working documents (not part of the repository)
 /docs/
+/Oracle/
 
 # Secrets and local environment
 .env
@@ -7,6 +8,7 @@
 !.env.example
 *.pem
 *.key
+*.key.pub
 
 # Python
 __pycache__/

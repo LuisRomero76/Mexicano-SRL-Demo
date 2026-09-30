@@ -107,3 +107,8 @@ async def health() -> JSONResponse:
         status_code=estado,
         content={"estado": "ok" if bd["ok"] else "degradado", "hora": ahora().isoformat(), "base_de_datos": bd},
     )
+
+
+@app.get("/ping", tags=["Sistema"], summary="Responde sin consultar la base (para monitores y keep-alive)")
+async def ping() -> dict[str, bool]:
+    return {"ok": True}
